@@ -7,5 +7,5 @@ class Crime {
     val mId: UUID = UUID.randomUUID()
     val mTitle: String? = null
     val date: Date = Date()
-    val solved: Boolean = false
+    var solved: Boolean = false
 }

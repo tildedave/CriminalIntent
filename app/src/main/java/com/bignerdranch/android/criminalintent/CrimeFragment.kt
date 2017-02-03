@@ -50,6 +50,10 @@ class CrimeFragment : Fragment() {
             }
         })
 
+        solvedCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            crime.solved = isChecked
+        }
+
         return v
     }
 
