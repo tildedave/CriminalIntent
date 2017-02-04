@@ -1,5 +1,7 @@
 package com.bignerdranch.android.criminalintent
 
+import android.content.Context
+import android.support.v4.app.FragmentActivity
 import java.util.*
 
 object CrimeLab {
