@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -28,9 +29,22 @@ class CrimeListFragment : Fragment() {
         return v
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateUI();
+    }
+
+    private var adapter: CrimeAdapter? = null
+
     private fun updateUI() {
         // TODO: scope via context (getActivity())
-        crimeRecyclerView.adapter = CrimeAdapter(CrimeLab.crimes)
+        
+        if (this.adapter == null) {
+            this.adapter = CrimeAdapter(CrimeLab.crimes)
+            crimeRecyclerView.adapter = this.adapter
+        } else {
+            this.adapter!!.notifyDataSetChanged()
+        }
     }
 
     inner class CrimeHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -60,7 +74,7 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            Toast.makeText(activity, crime.title + " clicked!", Toast.LENGTH_SHORT).show()
+            startActivity(CrimeActivity.newIntent(activity, crime.uuid))
         }
 
     }

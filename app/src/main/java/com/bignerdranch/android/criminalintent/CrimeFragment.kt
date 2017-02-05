@@ -12,8 +12,12 @@ import android.widget.CheckBox
 import android.widget.EditText
 import butterknife.BindView
 import butterknife.ButterKnife
+import java.util.*
+
+val ARG_CRIME_ID = "crime_id"
 
 class CrimeFragment : Fragment() {
+
     lateinit private var crime: Crime
 
     @BindView(R.id.crime_title)
@@ -27,15 +31,15 @@ class CrimeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crime = Crime()
+        val uuid = arguments.getSerializable(ARG_CRIME_ID) as UUID
+        crime = CrimeLab.getCrime(uuid)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v : View = inflater?.inflate(R.layout.fragment_crime, container, false) as View
         ButterKnife.bind(this, v);
 
-        dateButton.setText(crime.date.toString())
-        dateButton.setEnabled(false);
+        titleField.setText(crime.title)
         titleField.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -50,6 +54,10 @@ class CrimeFragment : Fragment() {
             }
         })
 
+        dateButton.text = crime.date.toString()
+        dateButton.setEnabled(false);
+
+        solvedCheckbox.isChecked = crime.solved
         solvedCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
             crime.solved = isChecked
         }
@@ -57,4 +65,15 @@ class CrimeFragment : Fragment() {
         return v
     }
 
+    companion object {
+        fun newInstance(crimeId: UUID): CrimeFragment {
+            val args = Bundle()
+            args.putSerializable(ARG_CRIME_ID, crimeId)
+
+            val fragment = CrimeFragment()
+            fragment.arguments = args
+
+            return fragment
+        }
+    }
 }
