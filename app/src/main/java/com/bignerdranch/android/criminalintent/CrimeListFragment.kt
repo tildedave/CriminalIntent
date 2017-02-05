@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 
@@ -32,7 +33,8 @@ class CrimeListFragment : Fragment() {
         crimeRecyclerView.adapter = CrimeAdapter(CrimeLab.crimes)
     }
 
-    class CrimeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class CrimeHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
         @BindView(R.id.list_item_crime_title_text_view)
         lateinit var titleTextView: TextView
 
@@ -46,6 +48,7 @@ class CrimeListFragment : Fragment() {
 
         init {
             ButterKnife.bind(this, itemView)
+            itemView.setOnClickListener(this)
         }
 
         fun bindCrime(crime: Crime) {
@@ -55,6 +58,11 @@ class CrimeListFragment : Fragment() {
             dateTextView.text = crime.date.toString()
             solvedCheckBox.isChecked = crime.solved
         }
+
+        override fun onClick(v: View?) {
+            Toast.makeText(activity, crime.title + " clicked!", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     inner class CrimeAdapter(val crimes: List<Crime>): RecyclerView.Adapter<CrimeHolder>() {
