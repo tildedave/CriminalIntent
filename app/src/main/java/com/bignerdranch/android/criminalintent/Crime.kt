@@ -3,9 +3,7 @@ package com.bignerdranch.android.criminalintent
 import java.util.Date
 import java.util.UUID
 
-class Crime(val title: String?, var solved: Boolean) {
+data class Crime(val title: String?, var solved: Boolean) {
     val uuid: UUID = UUID.randomUUID()
     val date: Date = Date()
-
-    constructor() : this(null, false)
 }
