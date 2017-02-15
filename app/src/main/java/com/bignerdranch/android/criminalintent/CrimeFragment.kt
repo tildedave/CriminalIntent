@@ -1,6 +1,7 @@
 package com.bignerdranch.android.criminalintent
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -18,6 +19,9 @@ import java.util.*
 val ARG_CRIME_ID = "crime_id"
 
 class CrimeFragment : Fragment() {
+
+    private val DIALOG_DATE: String = "DialogDate"
+    private val REQUEST_DATE = 0
 
     lateinit private var crime: Crime
 
@@ -56,8 +60,12 @@ class CrimeFragment : Fragment() {
             }
         })
 
-        dateButton.text = crime.date.toString()
-        dateButton.setEnabled(false);
+        updateDateButton()
+        dateButton.setOnClickListener { v ->
+            val dialog = DatePickerFragment.newInstance(crime.date)
+            dialog.setTargetFragment(this, REQUEST_DATE)
+            dialog.show(fragmentManager, DIALOG_DATE)
+        }
 
         solvedCheckbox.isChecked = crime.solved
         solvedCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -71,6 +79,21 @@ class CrimeFragment : Fragment() {
 
     fun returnResult() {
         activity.setResult(Activity.RESULT_OK, activity.intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (requestCode == REQUEST_DATE) {
+            crime.date = data!!.getSerializableExtra(EXTRA_DATE) as Date
+            updateDateButton()
+        }
+    }
+
+    private fun updateDateButton() {
+        dateButton.text = crime.date.toString()
     }
 
     companion object {

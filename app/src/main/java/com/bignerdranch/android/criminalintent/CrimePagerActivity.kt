@@ -11,8 +11,6 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import java.util.*
 
-val EXTRA_CRIME_ID: String = "com.bignerdranch.android.criminalintent.crime_id"
-
 class CrimePagerActivity : FragmentActivity() {
 
     @BindView(R.id.activity_crime_pager_view_pager)
