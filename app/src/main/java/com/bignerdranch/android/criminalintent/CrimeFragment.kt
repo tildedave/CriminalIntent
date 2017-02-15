@@ -1,5 +1,7 @@
 package com.bignerdranch.android.criminalintent
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -32,6 +34,7 @@ class CrimeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val uuid = arguments.getSerializable(ARG_CRIME_ID) as UUID
+
         crime = CrimeLab.getCrime(uuid)!!
     }
 
@@ -62,7 +65,13 @@ class CrimeFragment : Fragment() {
             crime.solved = isChecked
         }
 
+        returnResult()
+
         return v
+    }
+
+    fun returnResult() {
+        activity.setResult(Activity.RESULT_OK, activity.intent)
     }
 
     companion object {

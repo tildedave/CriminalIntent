@@ -10,9 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
-import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import java.util.*
+
+var REQUEST_CRIME: Int = 1;
 
 class CrimeListFragment : Fragment() {
 
@@ -29,21 +31,20 @@ class CrimeListFragment : Fragment() {
         return v
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateUI();
-    }
-
     private var adapter: CrimeAdapter? = null
 
-    private fun updateUI() {
-        // TODO: scope via context (getActivity())
+    private fun updateUI(uuid: UUID? = null) {
+        // TODO: scope singleton via context (getActivity())
         
         if (this.adapter == null) {
             this.adapter = CrimeAdapter(CrimeLab.crimes)
             crimeRecyclerView.adapter = this.adapter
-        } else {
+        } else if (uuid == null) {
+            System.out.println("EVERYTHING CHANGED :( THIS IS BAD PERFORMANCE")
             this.adapter!!.notifyDataSetChanged()
+        } else {
+            val position = CrimeLab.crimes.indexOfFirst { it.uuid == uuid }
+            this.adapter!!.notifyItemChanged(position)
         }
     }
 
@@ -74,9 +75,15 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            startActivity(CrimeActivity.newIntent(activity, crime.uuid))
+            startActivityForResult(CrimeActivity.newIntent(activity, crime.uuid), REQUEST_CRIME)
         }
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CRIME) {
+            val uuid = data!!.getSerializableExtra(EXTRA_CRIME_ID) as UUID
+            updateUI(uuid)
+        }
     }
 
     inner class CrimeAdapter(val crimes: List<Crime>): RecyclerView.Adapter<CrimeHolder>() {
