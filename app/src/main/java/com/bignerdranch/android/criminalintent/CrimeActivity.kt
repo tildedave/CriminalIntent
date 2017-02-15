@@ -5,8 +5,6 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import java.util.*
 
-val EXTRA_CRIME_ID: String = "com.bignerdranch.android.criminalintent.crime_id"
-
 class CrimeActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment {
         val uuid = intent.getSerializableExtra(EXTRA_CRIME_ID) as UUID
