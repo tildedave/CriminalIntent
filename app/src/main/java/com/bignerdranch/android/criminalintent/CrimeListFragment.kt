@@ -72,6 +72,9 @@ class CrimeListFragment : Fragment() {
             titleTextView.text = crime.title
             dateTextView.text = crime.date.toString()
             solvedCheckBox.isChecked = crime.solved
+            solvedCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                crime.solved = isChecked
+            }
         }
 
         override fun onClick(v: View?) {
