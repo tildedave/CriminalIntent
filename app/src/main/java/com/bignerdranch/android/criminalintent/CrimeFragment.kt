@@ -48,15 +48,15 @@ class CrimeFragment : Fragment() {
         titleField.setText(crime.title)
         titleField.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+                // Blank yo
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+                // Blank yo
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+                crime.title = s.toString()
             }
         })
 

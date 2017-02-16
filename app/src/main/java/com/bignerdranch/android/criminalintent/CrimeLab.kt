@@ -8,7 +8,7 @@ object CrimeLab {
     val crimes : ArrayList<Crime> = ArrayList<Crime>();
 
     init {
-        (1..100).forEach { i ->
+        (1..2).forEach { i ->
             val crime = Crime("Crime " + i, i % 2 == 0)
             crimes.add(crime)
         }
@@ -22,5 +22,9 @@ object CrimeLab {
         }
 
         return null
+    }
+
+    fun addCrime(c: Crime) {
+        crimes.add(c)
     }
 }

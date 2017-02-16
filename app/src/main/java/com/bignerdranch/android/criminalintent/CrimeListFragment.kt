@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.CheckBox
 import android.widget.TextView
 import butterknife.BindView
@@ -46,6 +44,16 @@ class CrimeListFragment : Fragment() {
             val position = CrimeLab.crimes.indexOfFirst { it.uuid == uuid }
             this.adapter!!.notifyItemChanged(position)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater!!.inflate(R.menu.fragment_crime_list, menu)
     }
 
     inner class CrimeHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -105,6 +113,20 @@ class CrimeListFragment : Fragment() {
 
         override fun getItemCount(): Int {
             return crimes.size
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.menu_item_new_crime -> {
+                val crime = Crime()
+                CrimeLab.crimes.add(crime)
+                startActivityForResult(CrimePagerActivity.newIntent(activity, crime.uuid),
+                        REQUEST_CRIME)
+
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 }
