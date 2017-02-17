@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -39,6 +37,24 @@ class CrimeFragment : Fragment() {
         val uuid = arguments.getSerializable(ARG_CRIME_ID) as UUID
 
         crime = CrimeLab.getCrime(uuid)!!
+        this.setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_crime, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_delete_crime -> {
+                CrimeLab.deleteCrime(crime.uuid)
+                activity.setResult(Activity.RESULT_CANCELED, activity.intent)
+                activity.finish()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

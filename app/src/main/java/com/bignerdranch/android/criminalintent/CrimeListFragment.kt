@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -38,18 +39,14 @@ class CrimeListFragment : Fragment() {
 
     private var adapter: CrimeAdapter? = null
 
-    private fun updateUI(uuid: UUID? = null) {
+    private fun updateUI() {
         // TODO: scope singleton via context (getActivity())
         
         if (this.adapter == null) {
             this.adapter = CrimeAdapter(CrimeLab.crimes)
             crimeRecyclerView.adapter = this.adapter
-        } else if (uuid == null) {
-            System.out.println("EVERYTHING CHANGED :( THIS IS BAD PERFORMANCE")
-            this.adapter!!.notifyDataSetChanged()
         } else {
-            val position = CrimeLab.crimes.indexOfFirst { it.uuid == uuid }
-            this.adapter!!.notifyItemChanged(position)
+            // nothing for now
         }
 
         updateSubtitle()
@@ -60,7 +57,7 @@ class CrimeListFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE, subtitleVisible)
     }
@@ -114,7 +111,16 @@ class CrimeListFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CRIME) {
             val uuid = data!!.getSerializableExtra(EXTRA_CRIME_ID) as UUID
-            updateUI(uuid)
+            val position = CrimeLab.crimes.indexOfFirst { it.uuid == uuid }
+
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    this.adapter!!.notifyItemChanged(position)
+                }
+                Activity.RESULT_CANCELED -> {
+                    this.adapter!!.notifyItemRemoved(position)
+                }
+            }
         }
     }
 
@@ -137,11 +143,11 @@ class CrimeListFragment : Fragment() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_item_new_crime -> {
                 val crime = Crime()
-                CrimeLab.crimes.add(crime)
+                CrimeLab.addCrime(crime)
                 startActivityForResult(CrimePagerActivity.newIntent(activity, crime.uuid),
                         REQUEST_CRIME)
 

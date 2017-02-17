@@ -15,16 +15,14 @@ object CrimeLab {
     }
 
     fun getCrime(uuid: UUID): Crime? {
-        crimes.forEach { crime ->
-            if (crime.uuid == uuid) {
-                return crime
-            }
-        }
-
-        return null
+        return crimes.find { it.uuid == uuid }
     }
 
     fun addCrime(c: Crime) {
         crimes.add(c)
+    }
+
+    fun deleteCrime(uuid: UUID) {
+        crimes.removeIf { it.uuid == uuid }
     }
 }
