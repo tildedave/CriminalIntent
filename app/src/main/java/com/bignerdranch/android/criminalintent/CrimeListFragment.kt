@@ -121,6 +121,8 @@ class CrimeListFragment : Fragment() {
                     this.adapter!!.notifyItemRemoved(position)
                 }
             }
+
+            updateSubtitle()
         }
     }
 
@@ -166,7 +168,8 @@ class CrimeListFragment : Fragment() {
     private fun updateSubtitle() {
         // This is dumb and pluralizes wrong
         val subtitle = if (subtitleVisible) {
-            getString(R.string.subtitle_format, CrimeLab.crimes.size.toString())
+            val size = CrimeLab.crimes.size
+            resources.getQuantityString(R.plurals.subtitle_plural, size, size)
         } else {
             null
         }
